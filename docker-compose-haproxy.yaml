@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  haproxy:
+    image: netka/ntacloud-haproxy-alpine:latest
+    container_name: ntacloud-haproxy
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    networks:
+      - ntacloud
+    volumes:
+      - './data/haproxy/:/usr/local/etc/haproxy/'
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8404:8404'
+      - '5555:5555'
+      - '3306:3306'
+
+networks:
+  ntacloud:
+    attachable: true
+    name: ntacloud

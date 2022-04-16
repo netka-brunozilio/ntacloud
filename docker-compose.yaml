@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  ntacloud:
+    image: netka/ntacloud:${TAG:-latest}
+    restart: always
+    container_name: ntacloud
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: host
+    volumes:
+      - 'ntacloud-db:/app/db'
+      - 'ntacloud-ssl-certs:/app/ssl'
+      - 'ntacloud-letsencrypt:/etc/letsencrypt'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    env_file:
+      - '.env'
+    networks:
+      - ntacloud-infra
+    depends_on: ['redis']
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    container_name: ntacloud-redis
+    networks:
+      - ntacloud-infra
+
+networks:
+  ntacloud-infra:
+    attachable: true
+    name: ntacloud-infra
+
+volumes:
+  ntacloud-db:
+    name: ntacloud-db
+  ntacloud-ssl-certs:
+    name: ntacloud-ssl-certs
+  ntacloud-letsencrypt:
+    name: ntacloud-letsencrypt
