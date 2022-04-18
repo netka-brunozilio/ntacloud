@@ -5,7 +5,7 @@ RUN apk add --no-cache curl
 RUN curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm@6
 RUN pnpm add -g pnpm
 
-COPY package*.json .
+COPY package*.json ./
 RUN pnpm install
 
 FROM node:16.14.2-alpine
